@@ -20,7 +20,16 @@ async function findUsersShelldue(userId){
       })
 }
 
+async function findSensorAtDB(sensorId){
+  return db.sensor.findUnique({
+    where:{
+      id:sensorId
+    }
+  })
+}
+
 module.exports = {
     findUser,
-    findUsersShelldue
+    findUsersShelldue,
+    findSensorAtDB
 }

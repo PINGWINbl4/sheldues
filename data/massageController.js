@@ -11,10 +11,15 @@ async function getMQTTData(topic, payload, packet){
         getSend = JSON.parse(stringPayload);
         const user = await utils.findUser(userId)
         const shelldue = await utils.findUsersShelldue(userId)
-        console.log(payload.toString())
+        console.log(getSend)
         shelldue.length ? console.log(shelldue):""
     } catch(err){
-        stringPayload == "online" || stringPayload == "offline" ? console.log(stringPayload) : console.log(err)
+        if(stringPayload == "online" || stringPayload == "offline"){
+            console.log(`${gatewayId} was ${stringPayload} at ${new Date()}`)
+        } 
+        else{
+            console.log(err)
+        }
     }
 }
 

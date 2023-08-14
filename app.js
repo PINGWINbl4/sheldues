@@ -11,19 +11,13 @@ const mqttOptions = {
   clean: true,
   connectTimeout: 1000,
   // Authentication
-  clientId: "scenarions",
+  clientId: process.env.MQTT_CLIENT_ID,
   username: process.env.MQTT_USERNAME,
-  password: "MQTTpassword1!",
+  password: process.env.MQTT_PASSWORD,
 };
 
 
 const mqttClient = mqtt.connect(mqttUrl, mqttOptions)
-mqttClient.on("connect", function (){
-    connectMqtt(mqttClient)
-});
+mqttClient.on("connect", () => connectMqtt(mqttClient));
 
-mqttClient.on("message", async function (topic, payload, packet) {
-    // Payload is Buffer
-    getMQTTData(topic, payload, packet)
-
-  });
+mqttClient.on("message", async (topic, payload, packet) => getMQTTData(topic, payload, packet));
