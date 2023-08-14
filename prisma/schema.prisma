@@ -1,0 +1,254 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  id       String            @id @unique @default(uuid())
+  name     String            @db.VarChar(99)
+  UTC      Int               @default(5) @db.SmallInt
+  conracts Contract[]
+  users    User[]
+}
+
+model User {
+  id String @id @unique @default(uuid())
+
+  name       String  @db.VarChar(255)
+  surname    String  @db.VarChar(255)
+  patronymic String  @db.VarChar(255)
+  email      String  @unique
+  phone      BigInt
+  password   String
+  verified   Boolean @default(false)
+
+  status UserStatus
+  client UserClient
+  role   UserRole
+
+  auto_updating Boolean @default(true)
+  auto_paying   Boolean @default(true)
+
+  hash_rst       String? @db.VarChar(255)
+  hash_vrf       String? @db.VarChar(255)
+  remainingTries Int     @default(0)
+
+  token String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  metrics       Metric[]
+  refreshTokens RefreshToken[]
+  shelldues     Shelldue[]
+  stations      Station[]
+  userGroups    UserToUserGroups[]
+  contracts     Contract[]
+
+  cityId String
+  city   City   @relation(fields: [cityId], references: [id])
+}
+
+model RefreshToken {
+  id          String @id @unique @default(uuid())
+  hashedToken String
+
+  revoked Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Contract {
+  id     String @id @unique @default(uuid())
+  number String @db.VarChar(255)
+
+  stations Station[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cityId String
+  city   City   @relation(fields: [cityId], references: [id])
+}
+
+model DeviceType {
+  id   String @id @unique @default(uuid())
+  name String @db.VarChar(255)
+
+  sensors  Sensor[]
+  stations Station[]
+  versions Version[]
+}
+
+model Version {
+  id          String @id @unique @default(uuid())
+  fileUrl     String
+  description String
+  version     String @db.VarChar(255)
+  servFileUrl String @default("")
+
+  sensors  SensorSettings[]
+  stations StationSettings[]
+
+  deviceId String
+  device   DeviceType @relation(fields: [deviceId], references: [id])
+}
+
+model Station {
+  id      String @id @unique @default(uuid())
+  gateway String @db.VarChar(99)
+
+  settings  StationSettings?
+  shelldues ShellduesOnStations[]
+  sensors   Sensor[]
+
+  deviceId   String
+  device     DeviceType @relation(fields: [deviceId], references: [id])
+  contractId String?
+  contract   Contract?   @relation(fields: [contractId], references: [id])
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StationSettings {
+  id   String @id @unique @default(uuid())
+  name String @db.VarChar(255)
+
+  options Json?
+
+  stationId String  @unique
+  station   Station @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  versionId String
+  version   Version @relation(fields: [versionId], references: [id])
+}
+
+model Sensor {
+  id  String @id @unique @default(uuid())
+  mac String @db.VarChar(99)
+
+  data     Data[]
+  settings SensorSettings?
+
+  deviceId  String
+  device    DeviceType @relation(fields: [deviceId], references: [id])
+  stationId String
+  station   Station    @relation(fields: [stationId], references: [id], onDelete: Cascade)
+}
+
+model SensorSettings {
+  id   String @id @unique @default(uuid())
+  name String @db.VarChar(255)
+
+  sleep BigInt? @default(10)
+  alert Boolean @default(false)
+  lost  Boolean @default(false)
+
+  triggerMin Float?
+  triggerMax Float?
+  schedule   Json?
+  options    Json?
+
+  pushStart DateTime? @db.Time(6)
+  pushEnd   DateTime? @db.Time(6)
+
+  sensorId  String  @unique
+  sensor    Sensor  @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  versionId String
+  version   Version @relation(fields: [versionId], references: [id])
+}
+
+model Data {
+  id String @id @unique @default(uuid())
+
+  value Json
+
+  createdAt DateTime @default(now())
+
+  sensorId String
+  sensor   Sensor @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+}
+
+model Activity {
+  id     String   @id @unique @default(uuid())
+  name   String
+  metric Metric[]
+}
+
+model Metric {
+  id String @id @unique @default(uuid())
+
+  datetime DateTime @default(now())
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserGroups {
+  id         String             @id @unique @default(uuid())
+  name       String
+  pushGroups UserToUserGroups[]
+}
+
+model UserToUserGroups {
+  userGroupId String
+  userGroup   UserGroups @relation(fields: [userGroupId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+
+  @@id([userGroupId, userId])
+}
+
+model Shelldue {
+  id     String  @id @unique @default(uuid())
+  active Boolean
+  name   String
+
+  hash String?
+
+  shelldueScript Json
+
+  deviceTypes String[]
+
+  stations ShellduesOnStations[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model ShellduesOnStations {
+  id String @id @unique @default(uuid())
+
+  shelldue   Shelldue @relation(fields: [shelldueId], references: [id], onDelete: Cascade)
+  shelldueId String
+
+  station   Station @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  stationId String
+}
+
+enum UserStatus {
+  active
+  inactive
+}
+
+enum UserClient {
+  bussiness
+  person
+  local
+}
+
+enum UserRole {
+  administrator
+  developer
+  manager
+  support
+  user
+}

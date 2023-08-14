@@ -1,0 +1,17 @@
+{
+  "name": "m2m_shelldues_microservice",
+  "version": "1.0.0",
+  "description": "m2m_shelldues_microservices",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "PING2WIN",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.1.1",
+    "mqtt": "^5.0.2",
+    "nodemon": "^3.0.1",
+    "socket.io": "^4.7.2"
+  }
+}
