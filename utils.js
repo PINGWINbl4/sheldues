@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const  db = new PrismaClient();
-
+var ignoredStations = []
 async function findUser(userId){
     return db.user.findUnique({
         where:{
@@ -22,13 +22,16 @@ async function findUsersShelldue(userId){
 
 async function findShelduesOfStation(gatewayId){
   let sheldues = []
-  
+  if(ignoredStations.includes(gatewayId)){
+    return 0
+  }
   const station = await db.station.findFirst({
     where:{
       gatewayId:gatewayId
     }
   })
   if(!station){
+    ignoredStations.push(gatewayId)
     throw new Error("Can't find station in db with this gatewayId")
   }
   const shelduesId = await db.ShellduesOnStations.findMany({
