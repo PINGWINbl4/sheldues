@@ -3,14 +3,14 @@ var querystring = require('querystring');
 
 async function checkActions(stationsShelldue, user){
     try{
-        console.log(stationsShelldue)
+        //console.log(stationsShelldue)
         const actions = stationsShelldue.shelldueScript.actions
         
         for (let i = 0; i < actions.length; i++) {
             const actionsKeys = Object.keys(actions[i])
             
             if(actionsKeys.includes("notification")){
-                console.log(actions[i].notification)
+                //console.log(actions[i].notification)
                 
                 const body = actions[i].notification.notificationMessage
                 switch (actions[i].notification.messageType) {
@@ -22,7 +22,7 @@ async function checkActions(stationsShelldue, user){
                         postEmailMessage(user, body)
                         break
                     default:
-                        break;
+                        throw new Error(`Invalid notification action. Expected push or email. Geted ${actions[i].notification.messageType}`);
                 }
             }
         }    
