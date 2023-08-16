@@ -69,7 +69,7 @@ async function postEmailMessage(user, content, html = undefined){
         // Build the post string from an object
         //console.log(html)
         var post_data = querystring.stringify({
-            user    :   user,
+            user    :   user.email,
             content :   content,
             html    :   html
         });
