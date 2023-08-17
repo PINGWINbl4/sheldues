@@ -19,6 +19,7 @@ async function checkActions(stationsShelldue, user){
                         postPushMessage(user, title, body)
                         break;
                     case "email":
+                        console.log(user)
                         postEmailMessage(user, body)
                         break
                     default:
@@ -67,9 +68,9 @@ async function postPushMessage(user, title, body){
 async function postEmailMessage(user, content, html = undefined){
     try{
         // Build the post string from an object
-        //console.log(html)
+        console.log(user.email)
         var post_data = querystring.stringify({
-            user    :   user.email,
+            email    :   user.email,
             content :   content,
             html    :   html
         });
