@@ -39,7 +39,7 @@ async function postPushMessage(user, title, body){
             throw new Error(`User ${user.email} don't wont to get push messages`)
         }
         const push = {
-            to: "dZTtgWlfRJSJT_BQ-fUd7_:APA91bHHtV-7ipqTLt4Jw-qmraTmV5pf8A6UyQz2c_DaBrKXaGN9PrQj4a3cXC9pX19lbxeuoMVP2kXtgZWx6bnn-1uSCUkcX3wmxuUHQjm5Wa_NoNR6CxpahhLG97_4eNyUI6KvFoff",
+            to: user.token,
             title: title,
             body: body,
           };
