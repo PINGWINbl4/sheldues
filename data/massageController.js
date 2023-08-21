@@ -12,7 +12,7 @@ async function getMQTTData(topic, payload, packet){
         const stationsShelldues = await utils.findShelduesOfStation(topic.gatewayId)
         
         for (let i = 0; i < stationsShelldues.length; i++) {         
-            if(await checkAllProviso(stationsShelldues[i], getSend)){
+            if(await checkAllProviso(stationsShelldues[i], getSend, topic)){
                 checkActions(stationsShelldues[i], user)
             }
         }
