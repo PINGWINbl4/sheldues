@@ -39,7 +39,7 @@ async function postPushMessage(user, title, body){
             throw new Error(`User ${user.email} don't wont to get push messages`)
         }
         const push = {
-            to: user.token,
+            to: "dZTtgWlfRJSJT_BQ-fUd7_:APA91bHHtV-7ipqTLt4Jw-qmraTmV5pf8A6UyQz2c_DaBrKXaGN9PrQj4a3cXC9pX19lbxeuoMVP2kXtgZWx6bnn-1uSCUkcX3wmxuUHQjm5Wa_NoNR6CxpahhLG97_4eNyUI6KvFoff",
             title: title,
             body: body,
           };
@@ -57,7 +57,7 @@ async function postPushMessage(user, title, body){
         }
         fetch(`http://${process.env.PUSH_HOST}:${process.env.PUSH_PORT}/api/push`, postData)
         .then(async (res) => {console.log(await res.json())})
-        .catch(err => {throw new Error(err)})
+        .catch(err => {console.log(err)})
     
     }
     catch(err){
