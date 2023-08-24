@@ -21,9 +21,7 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
         default:
             throw new Error(`Invalid proviso. Expected one or all. Geted ${stationsShelldue.shelldueScript.proviso}`);
     }
-
-    
-}
+} 
 
 async function findMatchingKeys(conditionKeys, getSend){
 
@@ -56,6 +54,7 @@ async function compareByProviso(ShellduesValue, proviso, getSendValue){
         case "!=":
             return ShellduesValue != getSendValue
         default:
+            throw new Error(`Invalid proviso. Expected =, >, <, <=, =<, >=, => or !=. Geted ${proviso}`)
             break;
     }
 }

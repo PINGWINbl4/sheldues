@@ -1,6 +1,7 @@
 const utils = require('../utils')
 const {checkAllProviso} = require('./provisoCheck')
-const {checkActions} = require('./actionController')
+const {checkActions,
+        doActions} = require('./actionController')
 //
 async function getMQTTData(topic, payload, packet){
     topic = parseTopic(topic)
@@ -10,10 +11,16 @@ async function getMQTTData(topic, payload, packet){
         getSend = JSON.parse(stringPayload);
         const user = await utils.findUser(topic.userId)
         const stationsShelldues = await utils.findShelduesOfStation(topic.gatewayId)
+        const station = await utils.findStationAtDB(topic.gatewayId)
         
+        /*if(user.id != station.userId){
+            throw new Error('Not your gateway')
+        }*/
         for (let i = 0; i < stationsShelldues.length; i++) {         
-            if(await checkAllProviso(stationsShelldues[i], getSend, topic)){
-                checkActions(stationsShelldues[i], user)
+            if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
+                console.log(topic)
+                checkActions(stationsShelldues[i], user, topic)
+                //doActions(stationsShelldues[i].shelldueScript.action, topic)
             }
         }
 

@@ -19,11 +19,17 @@ async function findUsersShelldue(userId){
       }    
       })
 }
-
+async function findStationAtDB(gatewayId){
+  return await db.station.findFirst({
+    where:{
+      gatewayId:gatewayId
+    }
+  })
+}
 async function findShelduesOfStation(gatewayId){
   let sheldues = []
   if(ignoredStations.includes(gatewayId)){
-    return 0
+    throw new Error(`${gatewayId} into banList`)
   }
   const station = await db.station.findFirst({
     where:{
@@ -32,7 +38,7 @@ async function findShelduesOfStation(gatewayId){
   })
   if(!station){
     ignoredStations.push(gatewayId)
-    throw new Error("Can't find station in db with this gatewayId")
+    throw new Error(`Can't find station in db with gatewayId ${gatewayId}`)
   }
   const shelduesId = await db.ShellduesOnStations.findMany({
     where:{
@@ -40,7 +46,7 @@ async function findShelduesOfStation(gatewayId){
     }
   })
   if(!shelduesId.length){
-    throw new Error("Station with this gatewayId haven't sheldues")
+    throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
   for (let i = 0; i < shelduesId.length; i++) {
     sheldues.push(await db.shelldue.findUnique({
@@ -64,5 +70,6 @@ module.exports = {
     findUser,
     findUsersShelldue,
     findSensorAtDB,
-    findShelduesOfStation
+    findShelduesOfStation,
+    findStationAtDB
 }
