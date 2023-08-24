@@ -13,12 +13,11 @@ async function getMQTTData(topic, payload, packet){
         const stationsShelldues = await utils.findShelduesOfStation(topic.gatewayId)
         const station = await utils.findStationAtDB(topic.gatewayId)
         
-        /*if(user.id != station.userId){
+        if(user.id != station.userId){
             throw new Error('Not your gateway')
-        }*/
+        }
         for (let i = 0; i < stationsShelldues.length; i++) {         
             if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
-                console.log(topic)
                 checkActions(stationsShelldues[i], user, topic)
                 //doActions(stationsShelldues[i].shelldueScript.action, topic)
             }
