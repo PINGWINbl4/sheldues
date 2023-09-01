@@ -45,6 +45,7 @@ async function findShelduesOfStation(gatewayId){
       stationId: station.id
     }
   })
+  console.log(shelduesId)
   if(!shelduesId.length){
     throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
