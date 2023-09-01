@@ -12,7 +12,7 @@ async function getMQTTData(topic, payload, packet){
         const user = await utils.findUser(topic.userId)
         const stationsShelldues = await utils.findShelduesOfStation(topic.gatewayId)
         const station = await utils.findStationAtDB(topic.gatewayId)
-        
+        console.log(getSend)
         if(user.id != station.userId){
             throw new Error('Not your gateway')
         }
