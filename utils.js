@@ -58,10 +58,10 @@ async function findShelduesOfStation(gatewayId){
   }
 }
 
-async function findSensorAtDB(sensorId){
-  return db.sensor.findUnique({
+async function findSensorAtDB(elementId){
+  return db.sensor.findFirst({
     where:{
-      id:sensorId
+      elementId:elementId
     }
   })
 }

@@ -42,7 +42,7 @@ function parseTopic(topic){
     return {
     userId:getTopic[0],
     gatewayId:getTopic[1],
-    sensorId:getTopic[2],
+    elementId:getTopic[2],
     }
 }
 

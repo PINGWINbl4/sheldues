@@ -43,7 +43,7 @@ async function notificationCheck(action, stationsShelldue, user){
                 postEmailMessage(user, body)
                 break
             default:
-                throw new Error(`Invalid notification action. Expected push or email. Geted ${actions[i].notification.messageType}`);
+                throw new Error(`Invalid notification action. Expected push or email. Geted ${action.notification.messageType}`);
         }
     }
 }
@@ -51,7 +51,7 @@ async function notificationCheck(action, stationsShelldue, user){
 async function doActions(action, topic){
 try{
     if(Object.keys(action).includes("set")){
-        const setTopic =`${topic.userId}/${topic.gatewayId}/${action.set.sensorId}/set`
+        const setTopic =`${topic.userId}/${topic.gatewayId}/${action.set.elementId}/set`
         mqttSetter.publishAsync( setTopic , JSON.stringify(action.set.script)) 
     }
 }

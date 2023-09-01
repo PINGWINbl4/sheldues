@@ -8,7 +8,7 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
     for (let i = 0; i < conditions.length; i++) {
         const conditionKeys = Object.keys(conditions[i])
         const checkedValueKey = await findMatchingKeys(conditionKeys, getSend)
-        topic.sensorId == conditions[i].sensor &&
+        topic.elementId == conditions[i].sensor &&
         await compareByProviso(conditions[i][checkedValueKey], conditions[i].proviso, getSend[checkedValueKey]) ?
             allProviso.true+=1 : 
             allProviso.false+=1 
