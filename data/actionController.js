@@ -34,6 +34,7 @@ async function checkActions(stationsShelldue, user, topic){
 async function notificationCheck(action, stationsShelldue, user){
     if(Object.keys(action).includes("notification")){
         const body = action.notification.notificationMessage
+        console.log(stationsShelldue)
         switch (action.notification.messageType){
             case "push":
                 const title = stationsShelldue.name
