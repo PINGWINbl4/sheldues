@@ -18,6 +18,7 @@ async function getMQTTData(topic, payload, packet){
         }
         for (let i = 0; i < stationsShelldues.length; i++) {         
             if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
+                console.log(stationsShelldues[i])
                 checkActions(stationsShelldues[i], user, topic)
                 //doActions(stationsShelldues[i].shelldueScript.action, topic)
             }
