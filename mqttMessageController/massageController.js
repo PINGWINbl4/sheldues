@@ -2,7 +2,7 @@ const utils = require('../utils')
 const {checkAllProviso} = require('./provisoCheck')
 const {checkActions,
         doActions} = require('./actionController')
-//
+
 async function getMQTTData(topic, payload, packet){
     topic = parseTopic(topic)
     const stringPayload = payload.toString()
@@ -19,8 +19,8 @@ async function getMQTTData(topic, payload, packet){
         for (let i = 0; i < stationsShelldues.length; i++) {         
             //console.log(stationsShelldues)
             if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
+                //utils.updateExeStatus(stationsShelldues[i], true)
                 checkActions(stationsShelldues[i], user, topic)
-                //doActions(stationsShelldues[i].shelldueScript.action, topic)
             }
         }
 

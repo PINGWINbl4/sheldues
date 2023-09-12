@@ -27,7 +27,7 @@ async function findStationAtDB(gatewayId){
   })
 }
 async function findShelduesOfStation(gatewayId){
-  let sheldues = []
+  let shelldues = []
   if(ignoredStations.includes(gatewayId)){
     throw new Error(`${gatewayId} into banList`)
   }
@@ -40,25 +40,25 @@ async function findShelduesOfStation(gatewayId){
     ignoredStations.push(gatewayId)
     throw new Error(`Can't find station in db with gatewayId ${gatewayId}`)
   }
-  const shelduesId = await db.ShellduesOnStations.findMany({
+  const shellduesId = await db.ShellduesOnStations.findMany({
     where:{
       stationId: station.id
     }
   })
   //console.log(shelduesId)
-  if(!shelduesId.length){
+  if(!shellduesId.length){
     throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
   //console.log(shelduesId.length)
   //console.log(shelduesId)
-  for (let i = 0; i < shelduesId.length; i++) {
-    sheldues.push(await db.shelldue.findUnique({
+  for (let i = 0; i < shellduesId.length; i++) {
+    shelldues.push(await db.shelldue.findUnique({
       where:{
-        id: shelduesId[i].shelldueId
+        id: shellduesId[i].shelldueId
       }
     }))
   }
-  return sheldues
+  return shelldues
 }
 
 async function findSensorAtDB(elementId){
@@ -69,10 +69,22 @@ async function findSensorAtDB(elementId){
   })
 }
 
+async function updateExeStatus(shelldue, status){
+  return db.shelldue.update({
+    where:{
+      id: shelldue.id
+    },
+    data:{
+      executing: status
+    }
+  })
+}
+
 module.exports = {
     findUser,
     findUsersShelldue,
     findSensorAtDB,
     findShelduesOfStation,
-    findStationAtDB
+    findStationAtDB,
+    updateExeStatus
 }

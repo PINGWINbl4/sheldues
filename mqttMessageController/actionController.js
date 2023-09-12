@@ -51,8 +51,12 @@ async function notificationCheck(action, stationsShelldue, user){
 async function doActions(action, topic){
 try{
     if(Object.keys(action).includes("set")){
-        const setTopic =`${topic.userId}/${topic.gatewayId}/${action.set.elementId}/set`
-        mqttSetter.publishAsync( setTopic , JSON.stringify(action.set.script)) 
+        for (let i = 0; i < action.set.length; i++) {
+            const set = action.set[i];
+            const setTopic =`${topic.userId}/${topic.gatewayId}/${set.elementId}/set`
+            mqttSetter.publishAsync( setTopic , JSON.stringify(action.set.script)) 
+            
+        }
     }
 }
 catch(err){
