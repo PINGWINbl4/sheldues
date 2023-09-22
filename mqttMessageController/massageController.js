@@ -2,6 +2,7 @@ const utils = require('../utils')
 const {checkAllProviso} = require('./provisoCheck')
 const {checkActions,
         doActions} = require('./actionController')
+const { warnEnvConflicts } = require('@prisma/client/runtime/library')
 
 async function getMQTTData(topic, payload, packet){
     topic = parseTopic(topic)
@@ -12,15 +13,19 @@ async function getMQTTData(topic, payload, packet){
         const user = await utils.findUser(topic.userId)
         const stationsShelldues = await utils.findShelduesOfStation(topic.gatewayId)
         const station = await utils.findStationAtDB(topic.gatewayId)
-        //console.log(getSend)
         if(user.id != station.userId){
             throw new Error('Not your gateway')
         }
         for (let i = 0; i < stationsShelldues.length; i++) {         
-            //console.log(stationsShelldues)
             if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
-                //utils.updateExeStatus(stationsShelldues[i], true)
                 checkActions(stationsShelldues[i], user, topic)
+                const sensor = await utils.findSensorAtDB(topic.elementId)
+                const toLog = {
+                    userId: topic.userId,
+                    stationId: station.id,
+                    sensorId: sensor.id
+                }
+                utils.writeToLog(toLog,1)
             }
         }
 
