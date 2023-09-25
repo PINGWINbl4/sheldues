@@ -23,7 +23,8 @@ async function getMQTTData(topic, payload, packet){
                 const toLog = {
                     userId: topic.userId,
                     stationId: station.id,
-                    sensorId: sensor.id
+                    sensorId: sensor.id,
+                    shelldueId: stationsShelldues[i].id
                 }
                 utils.writeToLog(toLog,1)
             }
