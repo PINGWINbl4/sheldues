@@ -23,6 +23,7 @@ async function postPushMessage(user, title, body){
                 push: push
             })
         }
+        console.log(body)
         fetch(`http://${process.env.PUSH_HOST}:${process.env.PUSH_PORT}/api/push`, postData)
         .then(async (res) => {console.log(await res.json())})
         .catch(err => {console.log(err)})
