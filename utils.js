@@ -48,12 +48,12 @@ async function findShelduesOfStation(gatewayId){
   if(!shellduesId.length){
     throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
-
+  console.log(shellduesId)
   for (let i = 0; i < shellduesId.length; i++) {
     shelldues.push(await db.shelldue.findFirst({
       where:{
           id: shellduesId[i].shelldueId,
-          shelldueType: "tip"
+          shelldueType: "condition"
       }
     }))
   }
