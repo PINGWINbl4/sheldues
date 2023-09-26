@@ -52,7 +52,7 @@ async function findShelduesOfStation(gatewayId){
     shelldues.push(await db.shelldue.findUnique({
       where:{
         id: shellduesId[i].shelldueId,
-        shelldueType: "condition"
+        //shelldueType: "condition"
       }
     }))
   }
