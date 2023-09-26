@@ -42,8 +42,7 @@ async function findShelduesOfStation(gatewayId){
   }
   const shellduesId = await db.ShellduesOnStations.findMany({
     where:{
-      stationId: station.id,
-      type: "condition"
+      stationId: station.id
     }
   })
   if(!shellduesId.length){
@@ -52,7 +51,8 @@ async function findShelduesOfStation(gatewayId){
   for (let i = 0; i < shellduesId.length; i++) {
     shelldues.push(await db.shelldue.findUnique({
       where:{
-        id: shellduesId[i].shelldueId
+        id: shellduesId[i].shelldueId,
+        type: "condition"
       }
     }))
   }
