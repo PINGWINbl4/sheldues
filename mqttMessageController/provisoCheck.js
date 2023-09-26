@@ -6,7 +6,7 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
         false:0,
     }
     console.log(stationsShelldue.shelldueScript.actions)
-    if(conditions.length){
+    if(conditions){
         for (let i = 0; i < conditions.length; i++) {
             const conditionKeys = Object.keys(conditions[i])
             const checkedValueKey = await findMatchingKeys(conditionKeys, getSend)
