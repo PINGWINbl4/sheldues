@@ -37,7 +37,7 @@ async function getMQTTData(topic, payload, packet){
             console.log(`${topic.gatewayId} was ${stringPayload} at ${new Date()}`)
         } 
         else{
-            S(err)
+            console.log(err)
         }
     }
 }
