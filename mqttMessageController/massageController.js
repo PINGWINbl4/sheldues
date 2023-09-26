@@ -16,7 +16,6 @@ async function getMQTTData(topic, payload, packet){
         if(user.id != station.userId){
             throw new Error('Not your gateway')
         }
-        //console.log(stationsShelldues)
         for (let i = 0; i < stationsShelldues.length; i++) {         
             if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
                 checkActions(stationsShelldues[i], user, topic)
@@ -38,7 +37,7 @@ async function getMQTTData(topic, payload, packet){
             console.log(`${topic.gatewayId} was ${stringPayload} at ${new Date()}`)
         } 
         else{
-            console.log(err)
+            S(err)
         }
     }
 }

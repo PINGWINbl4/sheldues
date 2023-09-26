@@ -39,7 +39,6 @@ async function findMatchingKeys(conditionKeys, getSend){
 }
 
 async function compareByProviso(ShellduesValue, proviso, getSendValue){
-    //console.log(ShellduesValue, proviso, getSendValue)
     if(ShellduesValue == undefined){
         return false
     }
