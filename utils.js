@@ -56,6 +56,7 @@ async function findShelduesOfStation(gatewayId){
       }
     }))
   }
+  console.log(shelldues)
   return shelldues
 }
 
