@@ -45,7 +45,7 @@ async function findShelduesOfStation(gatewayId){
       stationId: station.id
     }
   })
-  //console.log(shelduesId)
+  //console.log(shellduesId)
   if(!shellduesId.length){
     throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
