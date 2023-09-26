@@ -49,7 +49,7 @@ async function findShelduesOfStation(gatewayId){
     throw new Error(`Station with ${gatewayId} gatevayId haven't condition sheldues`)
   }
   for (let i = 0; i < shellduesId.length; i++) {
-    shelldues.push(await db.shelldue.findUnique({
+    shelldues.push(await db.shelldue.findFirst({
       where:{
         AND:{
           id: shellduesId[i].shelldueId,
@@ -58,7 +58,7 @@ async function findShelduesOfStation(gatewayId){
       }
     }))
   }
-  console.log(shelldues)
+  //console.log(shelldues)
   return shelldues
 }
 
