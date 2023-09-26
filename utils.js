@@ -51,14 +51,12 @@ async function findShelduesOfStation(gatewayId){
   for (let i = 0; i < shellduesId.length; i++) {
     shelldues.push(await db.shelldue.findFirst({
       where:{
-        AND:{
           id: shellduesId[i].shelldueId,
           shelldueType: "condition"
-        }
       }
     }))
   }
-  //console.log(shelldues)
+  console.log(shelldues)
   return shelldues
 }
 
