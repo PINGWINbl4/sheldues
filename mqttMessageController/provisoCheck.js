@@ -6,21 +6,23 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
         false:0,
     }
     console.log(stationsShelldue.shelldueScript.actions)
-    for (let i = 0; i < conditions.length; i++) {
-        const conditionKeys = Object.keys(conditions[i])
-        const checkedValueKey = await findMatchingKeys(conditionKeys, getSend)
-        topic.elementId == conditions[i].sensor &&
-        await compareByProviso(conditions[i][checkedValueKey], conditions[i].proviso, getSend[checkedValueKey]) ?
-            allProviso.true+=1 : 
-            allProviso.false+=1 
-    }
-    switch (stationsShelldue.shelldueScript.proviso) {
-        case "one":
-            return allProviso.true > 0
-        case "all":
-            return allProviso.false == 0
-        default:
-            throw new Error(`Invalid proviso. Expected one or all. Geted ${stationsShelldue.shelldueScript.proviso}`);
+    if(conditions.length){
+        for (let i = 0; i < conditions.length; i++) {
+            const conditionKeys = Object.keys(conditions[i])
+            const checkedValueKey = await findMatchingKeys(conditionKeys, getSend)
+            topic.elementId == conditions[i].sensor &&
+            await compareByProviso(conditions[i][checkedValueKey], conditions[i].proviso, getSend[checkedValueKey]) ?
+                allProviso.true+=1 : 
+                allProviso.false+=1 
+        }
+        switch (stationsShelldue.shelldueScript.proviso) {
+            case "one":
+                return allProviso.true > 0
+            case "all":
+                return allProviso.false == 0
+            default:
+                throw new Error(`Invalid proviso. Expected one or all. Geted ${stationsShelldue.shelldueScript.proviso}`);
+        }
     }
 } 
 
