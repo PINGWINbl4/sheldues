@@ -42,15 +42,13 @@ async function findShelduesOfStation(gatewayId){
   }
   const shellduesId = await db.ShellduesOnStations.findMany({
     where:{
-      stationId: station.id
+      stationId: station.id,
+      type: "condition"
     }
   })
-  //console.log(shellduesId)
   if(!shellduesId.length){
-    throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
+    throw new Error(`Station with ${gatewayId} gatevayId haven't condition sheldues`)
   }
-  //console.log(shelduesId.length)
-  //console.log(shelduesId)
   for (let i = 0; i < shellduesId.length; i++) {
     shelldues.push(await db.shelldue.findUnique({
       where:{
