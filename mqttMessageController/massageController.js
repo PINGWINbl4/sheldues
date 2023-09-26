@@ -26,7 +26,7 @@ async function getMQTTData(topic, payload, packet){
                     sensorId: sensor.id,
                     shelldueId: stationsShelldues[i].id
                 }
-                //utils.writeToLog(toLog,1)
+                utils.writeToLog(toLog,1)
             }
         }
 
