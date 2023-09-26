@@ -1,4 +1,5 @@
 async function checkAllProviso(stationsShelldue, getSend, topic){
+    console.log(stationsShelldue)
     const conditions = stationsShelldue.shelldueScript.conditions
     let allProviso = {
         true:0,
