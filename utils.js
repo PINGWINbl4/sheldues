@@ -53,7 +53,7 @@ async function findShelduesOfStation(gatewayId){
     shelldues.push(await db.shelldue.findFirst({
       where:{
           id: shellduesId[i].shelldueId,
-          shelldueType: "condition"
+          shelldueType: "condition"||"tip"
       }
     }))
   }
