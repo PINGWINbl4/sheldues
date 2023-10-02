@@ -21,26 +21,28 @@ model User {
   surname        String             @db.VarChar(255)
   patronymic     String             @db.VarChar(255)
   email          String             @unique
-  password       String
-  auto_updating  Boolean            @default(true)
-  auto_paying    Boolean            @default(true)
-  hash_rst       String?            @db.VarChar(255)
   phone          BigInt
+  password       String
+  verified       Boolean            @default(false)
   status         UserStatus
   client         UserClient
   role           UserRole
-  cityId         String
+  auto_updating  Boolean            @default(true)
+  auto_paying    Boolean            @default(true)
+  get_push       Boolean            @default(true)
+  get_email      Boolean            @default(true)
+  hash_rst       String?            @db.VarChar(255)
+  hash_vrf       String?            @db.VarChar(255)
+  remainingTries Int                @default(0)
+  token          String[]
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
-  remainingTries Int                @default(0)
-  verified       Boolean            @default(false)
-  hash_vrf       String?            @db.VarChar(255)
-  token          String[]
-  get_email      Boolean            @default(true)
-  get_push       Boolean            @default(true)
+  cityId         String
   contracts      Contract[]
+  EventLog       EventLog[]
   metrics        Metric[]
   refreshTokens  RefreshToken[]
+  Rooms          Rooms[]
   shelldues      Shelldue[]
   stations       Station[]
   city           City               @relation(fields: [cityId], references: [id])
@@ -50,10 +52,10 @@ model User {
 model RefreshToken {
   id          String   @id @unique @default(uuid())
   hashedToken String
-  userId      String
   revoked     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -66,12 +68,19 @@ model Contract {
 }
 
 model DeviceType {
-  id       String    @id @unique @default(uuid())
-  name     String    @db.VarChar(255)
-  code     String?   @unique
-  sensors  Sensor[]
-  stations Station[]
-  versions Version[]
+  id                 String               @id @unique @default(uuid())
+  name               String               @db.VarChar(255)
+  code               String?              @unique
+  iconId             String?
+  category           deviceCategory?
+  frontView          Json?
+  commands           Json?
+  DefaultScripts     DefaultScripts[]
+  Icon               Icon?                @relation(fields: [iconId], references: [id])
+  DeviceTypesAtGroup DeviceTypesAtGroup[]
+  sensors            Sensor[]
+  stations           Station[]
+  versions           Version[]
 }
 
 model Version {
@@ -79,8 +88,9 @@ model Version {
   fileUrl     String
   description String
   version     String            @db.VarChar(255)
-  deviceId    String
   servFileUrl String            @default("")
+  deviceId    String
+  createdAt   DateTime          @default(now())
   sensors     SensorSettings[]
   stations    StationSettings[]
   device      DeviceType        @relation(fields: [deviceId], references: [id])
@@ -89,10 +99,11 @@ model Version {
 model Station {
   id         String                @id @unique @default(uuid())
   mac        String?               @db.VarChar(99)
-  userId     String
+  gatewayId  String?               @db.VarChar(99)
   deviceId   String
   contractId String?
-  gatewayId  String?               @db.VarChar(99)
+  userId     String
+  EventLog   EventLog[]
   sensors    Sensor[]
   shelldues  ShellduesOnStations[]
   contract   Contract?             @relation(fields: [contractId], references: [id])
@@ -104,11 +115,13 @@ model Station {
 model StationSettings {
   id        String  @id @unique @default(uuid())
   name      String  @db.VarChar(255)
+  options   Json?
   stationId String  @unique
   versionId String
-  options   Json?
   cityId    String?
+  roomsId   String?
   City      City?   @relation(fields: [cityId], references: [id])
+  Rooms     Rooms?  @relation(fields: [roomsId], references: [id], onDelete: Cascade)
   station   Station @relation(fields: [stationId], references: [id], onDelete: Cascade)
   version   Version @relation(fields: [versionId], references: [id])
 }
@@ -116,12 +129,13 @@ model StationSettings {
 model Sensor {
   id        String          @id @unique @default(uuid())
   mac       String          @db.VarChar(99)
-  uptime    BigInt?
+  elementId String?         @db.VarChar(99)
   charge    Int?
+  uptime    BigInt?
   deviceId  String
   stationId String
-  elementId String?         @db.VarChar(99)
   data      Data[]
+  EventLog  EventLog[]
   device    DeviceType      @relation(fields: [deviceId], references: [id])
   station   Station         @relation(fields: [stationId], references: [id], onDelete: Cascade)
   settings  SensorSettings?
@@ -133,25 +147,30 @@ model SensorSettings {
   sleep      BigInt?   @default(10)
   alert      Boolean   @default(false)
   lost       Boolean   @default(false)
-  sensorId   String    @unique
-  versionId  String
-  pushStart  DateTime? @db.Time(6)
-  pushEnd    DateTime? @db.Time(6)
   triggerMin Float?
   triggerMax Float?
   schedule   Json?
   options    Json?
+  pushStart  DateTime? @db.Time(6)
+  pushEnd    DateTime? @db.Time(6)
+  sensorId   String    @unique
+  versionId  String
+  roomsId    String?
+  iconId     String?
+  Icon       Icon?     @relation(fields: [iconId], references: [id])
+  Rooms      Rooms?    @relation(fields: [roomsId], references: [id], onDelete: Cascade)
   sensor     Sensor    @relation(fields: [sensorId], references: [id], onDelete: Cascade)
   version    Version   @relation(fields: [versionId], references: [id])
 }
 
 model Data {
-  id        String   @id @unique @default(uuid())
+  id        String     @id @unique @default(uuid())
   value     Json
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
   sensorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  sensor    Sensor   @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  sensor    Sensor     @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  EventLog  EventLog[]
 }
 
 model Activity {
@@ -162,8 +181,8 @@ model Activity {
 
 model Metric {
   id         String   @id @unique @default(uuid())
-  activityId String
   datetime   DateTime @default(now())
+  activityId String
   userId     String
   activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -186,12 +205,18 @@ model UserToUserGroups {
 
 model Shelldue {
   id             String                @id @unique @default(uuid())
+  active         Boolean
   name           String
   hash           String?
   shelldueScript Json
-  userId         String
-  active         Boolean
   deviceTypes    String[]
+  userId         String
+  executing      Boolean               @default(false)
+  shelldueType   ShelldueType          @default(condition)
+  runtimeEnd     DateTime?             @db.Time(6)
+  runtimeStart   DateTime?             @db.Time(6)
+  success        Boolean[]
+  EventLog       EventLog[]
   user           User                  @relation(fields: [userId], references: [id])
   stations       ShellduesOnStations[]
 }
@@ -205,11 +230,80 @@ model ShellduesOnStations {
 }
 
 model PushMessage {
-  id        String @id @unique
+  id        String @id @unique @default(uuid())
   title     String
   body      String
   condition String
   code      Int    @unique
+}
+
+model DefaultScripts {
+  id          String     @id @unique @default(uuid())
+  deviceId    String
+  script      Json
+  description String?
+  DeviceType  DeviceType @relation(fields: [deviceId], references: [id])
+}
+
+model DeviceGroup {
+  id                 String               @id @unique @default(uuid())
+  name               String
+  iconId             String?
+  Icon               Icon?                @relation(fields: [iconId], references: [id])
+  DeviceTypesAtGroup DeviceTypesAtGroup[]
+}
+
+model DeviceTypesAtGroup {
+  groupId     String
+  deviceId    String
+  DeviceType  DeviceType  @relation(fields: [deviceId], references: [id])
+  DeviceGroup DeviceGroup @relation(fields: [groupId], references: [id])
+
+  @@id([groupId, deviceId])
+}
+
+model EventCode {
+  id          String     @id @unique @default(uuid())
+  description String
+  code        Int        @unique
+  EventLog    EventLog[]
+}
+
+model EventLog {
+  id         String    @id @unique @default(uuid())
+  userId     String
+  sensorId   String?
+  stationId  String?
+  dataId     String?
+  codeId     String
+  shelldueId String?
+  createdAt  DateTime  @default(now())
+  EventCode  EventCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  Data       Data?     @relation(fields: [dataId], references: [id], onDelete: Cascade)
+  Sensor     Sensor?   @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  Shelldue   Shelldue? @relation(fields: [shelldueId], references: [id], onDelete: Cascade)
+  Station    Station?  @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  User       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Icon {
+  id             String           @id @unique @default(uuid())
+  name           String
+  url            String
+  DeviceGroup    DeviceGroup[]
+  DeviceType     DeviceType[]
+  SensorSettings SensorSettings[]
+}
+
+model Rooms {
+  id              String            @id @unique @default(uuid())
+  name            String            @db.VarChar(255)
+  userId          String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  User            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  SensorSettings  SensorSettings[]
+  StationSettings StationSettings[]
 }
 
 enum UserStatus {
@@ -229,4 +323,16 @@ enum UserRole {
   manager
   support
   user
+}
+
+enum ShelldueType {
+  time
+  condition
+  tip
+}
+
+enum deviceCategory {
+  State
+  Action
+  K_Telecom
 }

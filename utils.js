@@ -79,6 +79,16 @@ async function updateExeStatus(shelldue, status){
   })
 }
 
+async function updateShelldueSuccess(shelldue){
+  return await db.shelldue.update({
+    where:{
+      id: shelldue.id
+    },
+    data:{
+      success: shelldue.success
+    }
+  })
+  }
 async function writeToLog(data, code){
 
   const logCode = await db.EventCode.findUnique({
@@ -101,5 +111,6 @@ module.exports = {
     findShelduesOfStation,
     findStationAtDB,
     updateExeStatus,
-    writeToLog
+    writeToLog,
+    updateShelldueSuccess
 }
