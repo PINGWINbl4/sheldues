@@ -2,7 +2,6 @@ const utils = require('../utils')
 const {checkAllProviso} = require('./provisoCheck')
 const {checkActions,
         doActions} = require('./actionController')
-const { warnEnvConflicts } = require('@prisma/client/runtime/library')
 
 async function getMQTTData(topic, payload, packet){
     topic = parseTopic(topic)

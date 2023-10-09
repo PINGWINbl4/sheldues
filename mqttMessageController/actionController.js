@@ -52,6 +52,7 @@ try{
     if(Object.keys(action).includes("set")){
         for (let i = 0; i < action.set.length; i++) {
             const set = action.set[i];
+            console.log(set)
             const setTopic =`${topic.userId}/${topic.gatewayId}/${set.elementId}/set`
             mqttSetter.publishAsync( setTopic , JSON.stringify(action.set.script)) 
             
