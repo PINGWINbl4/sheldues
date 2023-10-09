@@ -18,14 +18,14 @@ async function getMQTTData(topic, payload, packet){
         for (let i = 0; i < stationsShelldues.length; i++) {         
             if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
                 checkActions(stationsShelldues[i], user, topic)
-                const sensor = await utils.findSensorAtDB(topic.elementId)
+                /*const sensor = await utils.findSensorAtDB(topic.elementId)
                 const toLog = {
                     userId: topic.userId,
                     stationId: station.id,
                     sensorId: sensor.id,
                     shelldueId: stationsShelldues[i].id
                 }
-                utils.writeToLog(toLog,1)
+                utils.writeToLog(toLog,1)*/
             }
         }
 
