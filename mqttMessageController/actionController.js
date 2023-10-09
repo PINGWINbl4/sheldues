@@ -17,10 +17,12 @@ const mqttOptions = {
 const mqttSetter = mqtt.connect(mqttUrl, mqttOptions)
 
 async function checkActions(stationsShelldue, user, topic){
+    console.log(2)
     try{
         const actions = stationsShelldue.shelldueScript.actions
         for (let i = 0; i < actions.length; i++) {
             const action = actions[i]
+            console.log(action)
             notificationCheck(action, stationsShelldue, user)
             doActions(action, topic)
         }    

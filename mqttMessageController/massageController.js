@@ -17,6 +17,7 @@ async function getMQTTData(topic, payload, packet){
         }
         for (let i = 0; i < stationsShelldues.length; i++) {         
             if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
+                console.log(1)
                 checkActions(stationsShelldues[i], user, topic)
                 /*const sensor = await utils.findSensorAtDB(topic.elementId)
                 const toLog = {
