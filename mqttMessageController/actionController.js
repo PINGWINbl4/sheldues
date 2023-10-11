@@ -1,7 +1,8 @@
 const { postEmailMessage,
         postPushMessage  } = require('./notifications')
 const mqtt = require("mqtt");
-
+const {checkAllProviso} = require('./provisoCheck')
+const utils = require('../utils')
 const mqttUrl = "mqtt://hs.k-telecom.org:8883";
 const mqttOptions = {
   // Clean session
@@ -17,16 +18,19 @@ const mqttOptions = {
 const mqttSetter = mqtt.connect(mqttUrl, mqttOptions)
 
 async function checkActions(stationsShelldue, user, topic){
-    console.log(2)
     try{
         const actions = stationsShelldue.shelldueScript.actions
-        console.log(stationsShelldue.shelldueScript.actions)
-        for (let i = 0; i < actions.length; i++) {
-            const action = actions[i]
-            console.log(action)
-            notificationCheck(action, stationsShelldue, user)
-            doActions(action, topic)
-        }    
+        let sameState = true
+        console.log(`состояния ${stationsShelldue.success[0]} ${stationsShelldue.lastSuccess[0]}`)
+        for (let i = 0; i < stationsShelldue.success.length; i++) {
+            stationsShelldue.success[i] != stationsShelldue.lastSuccess[i] ? sameState=false:""
+        }
+        if(!sameState){
+            stationsShelldue = await utils.findShelldueById(stationsShelldue)
+            await notificationCheck(actions, stationsShelldue, user)
+            await doActions(actions, stationsShelldue, topic)
+            utils.updateLastSuccess(stationsShelldue)
+        }
     }
     catch(err){
         console.log(err)
@@ -50,15 +54,15 @@ async function notificationCheck(action, stationsShelldue, user){
     }
 }
 
-async function doActions(action, topic){
+async function doActions(action, shelldue, topic){
 try{
     if(Object.keys(action).includes("set")){
         for (let i = 0; i < action.set.length; i++) {
             const set = action.set[i];
-            console.log(set)
             const setTopic =`${topic.userId}/${topic.gatewayId}/${set.elementId}/set`
-            mqttSetter.publishAsync( setTopic , JSON.stringify(action.set.script)) 
-            
+            if(set.executing == shelldue.executing){
+                mqttSetter.publishAsync(setTopic, JSON.stringify(set))
+            } 
         }
     }
 }

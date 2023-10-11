@@ -3,11 +3,11 @@ const {checkAllProviso} = require('./provisoCheck')
 const {checkActions,
         doActions} = require('./actionController')
 
-async function getMQTTData(topic, payload, packet){
-    topic = parseTopic(topic)
+async function getMQTTData(topic, payload){
+    
     const stringPayload = payload.toString()
-
     try{
+        topic = parseTopic(topic)
         getSend = JSON.parse(stringPayload);
         const user = await utils.findUser(topic.userId)
         const stationsShelldues = await utils.findShelduesOfStation(topic.gatewayId)
@@ -15,10 +15,10 @@ async function getMQTTData(topic, payload, packet){
         if(user.id != station.userId){
             throw new Error('Not your gateway')
         }
-        for (let i = 0; i < stationsShelldues.length; i++) {         
-            if(await checkAllProviso(stationsShelldues[i], getSend, topic) && stationsShelldues[i].active){
-                console.log(1)
-                checkActions(stationsShelldues[i], user, topic)
+        for (let i = 0; i < stationsShelldues.length; i++) {     
+            if((await checkAllProviso(stationsShelldues[i], getSend, topic)||stationsShelldues[i].executing) && stationsShelldues[i].active ){
+                await checkActions(stationsShelldues[i], user, topic)
+                utils.updateLastSuccess(stationsShelldues[i])
                 /*const sensor = await utils.findSensorAtDB(topic.elementId)
                 const toLog = {
                     userId: topic.userId,
@@ -26,7 +26,7 @@ async function getMQTTData(topic, payload, packet){
                     sensorId: sensor.id,
                     shelldueId: stationsShelldues[i].id
                 }
-                utils.writeToLog(toLog,1)*/
+                utils.writeToLog(toLog,1)//*/
             }
         }
 

@@ -5,8 +5,8 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
     let timeNow
     stationsShelldue.runtimeStart? timeNow = (stationsShelldue.runtimeStart <= await getCurrentTime()) && (await getCurrentTime() <= stationsShelldue.runtimeEnd): timeNow = false
     const anyTime = !(stationsShelldue.runtimeEnd && stationsShelldue.runtimeStart)
-    if(conditions && (timeNow || anyTime)){
-        console.log(timeNow, anyTime, stationsShelldue.id)
+    if(conditions && (timeNow || anyTime) ){
+        console.log(stationsShelldue.id)
         console.log("Time correct. Start check conditions")
         for (let i = 0; i < conditions.length; i++) {
                 const conditionKeys = Object.keys(conditions[i])
@@ -28,11 +28,11 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
         switch (stationsShelldue.shelldueScript.proviso) {
             case "one":
                 result = stationsShelldue.success.includes(true)
-                result? utils.updateExeStatus(stationsShelldue, true) : utils.updateExeStatus(stationsShelldue, false)
+                await utils.updateExeStatus(stationsShelldue, result)
                 return result
             case "all":
                 result = !stationsShelldue.success.includes(false)
-                result? utils.updateExeStatus(stationsShelldue, true) : utils.updateExeStatus(stationsShelldue, false)
+                await utils.updateExeStatus(stationsShelldue, result)
                 return result
             default:
                 throw new Error(`Invalid proviso. Expected one or all. Geted ${stationsShelldue.shelldueScript.proviso}`);
@@ -86,7 +86,6 @@ async function getCurrentTime(){
     currentTime.setMinutes(currentTime.getMinutes()+1)
     return currentTime
 }
-
 module.exports = {
  checkAllProviso
 }

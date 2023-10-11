@@ -104,6 +104,30 @@ async function writeToLog(data, code){
   return eLog
 }
 
+async function updateLastSuccess(shelldue){
+    shelldue = await db.shelldue.findUnique({
+      where:{
+        id: shelldue.id
+      }
+    })
+    shelldue.lastSuccess = shelldue.success
+    return await db.shelldue.update({
+      where:{
+        id: shelldue.id
+      },
+      data:{
+        lastSuccess: shelldue.lastSuccess
+      }
+    })
+}
+
+async function findShelldueById(shelldue){
+  return await db.shelldue.findUnique({
+    where:{
+      id:shelldue.id
+    }
+  })
+}
 module.exports = {
     findUser,
     findUsersShelldue,
@@ -112,5 +136,7 @@ module.exports = {
     findStationAtDB,
     updateExeStatus,
     writeToLog,
-    updateShelldueSuccess
+    updateShelldueSuccess,
+    updateLastSuccess,
+    findShelldueById
 }
