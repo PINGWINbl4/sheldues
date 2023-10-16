@@ -38,17 +38,21 @@ async function checkActions(stationsShelldue, user, topic){
 
 async function notificationCheck(action, stationsShelldue, user){
     if(Object.keys(action).includes("notification")){
-        const body = action.notification.notificationMessage
-        switch (action.notification.messageType){
-            case "push":
-                const title = stationsShelldue.name
-                postPushMessage(user, title, body)
-                break;
-            case "email":
-                postEmailMessage(user, body)
-                break
-            default:
-                throw new Error(`Invalid notification action. Expected push or email. Geted ${action.notification.messageType}`);
+        for (let i = 0; i < action.notification.length; i++) {
+            const body = action.notification.notificationMessage[i]
+            if(set.executing == shelldue.executing){
+                switch (action.notification.messageType){
+                    case "push":
+                        const title = stationsShelldue.name
+                        postPushMessage(user, title, body)
+                        break;
+                    case "email":
+                        postEmailMessage(user, body)
+                        break
+                    default:
+                        throw new Error(`Invalid notification action. Expected push or email. Geted ${action.notification.messageType}`);
+                }
+            }
         }
     }
 }
