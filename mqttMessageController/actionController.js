@@ -42,7 +42,7 @@ async function notificationCheck(action, stationsShelldue, user){
             const body = action.notification[i].notificationMessage
             console.log(stationsShelldue)
             if(action.notification[i].executing == stationsShelldue.executing){
-                switch (action.notification.messageType){
+                switch (action.notification[i].messageType){
                     case "push":
                         const title = stationsShelldue.name
                         postPushMessage(user, title, body)
