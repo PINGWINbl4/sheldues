@@ -40,7 +40,7 @@ async function notificationCheck(action, stationsShelldue, user){
     if(Object.keys(action).includes("notification")){
         for (let i = 0; i < action.notification.length; i++) {
             const body = action.notification.notificationMessage[i]
-            if(set.executing == shelldue.executing){
+            if(action.notification.executing == shelldue.executing){
                 switch (action.notification.messageType){
                     case "push":
                         const title = stationsShelldue.name
