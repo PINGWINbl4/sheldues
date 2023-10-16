@@ -21,7 +21,6 @@ async function checkActions(stationsShelldue, user, topic){
     try{
         const actions = stationsShelldue.shelldueScript.actions
         let sameState = true
-        console.log(`состояния ${stationsShelldue.success[0]} ${stationsShelldue.lastSuccess[0]}`)
         for (let i = 0; i < stationsShelldue.success.length; i++) {
             stationsShelldue.success[i] != stationsShelldue.lastSuccess[i] ? sameState=false:""
         }
@@ -62,6 +61,17 @@ try{
             const setTopic =`${topic.userId}/${topic.gatewayId}/${set.elementId}/set`
             if(set.executing == shelldue.executing){
                 mqttSetter.publishAsync(setTopic, JSON.stringify(set))
+                console.log(shelldue)
+                const sensor = await utils.findSensorAtDB(set.elementId)
+                const toLog = {
+                        userId: shelldue.userId,
+                        stationId: sensor.stationId,
+                        sensorId: sensor.id,
+                        shelldueId: shelldue.id,
+                        sensorName: sensor.settings.name,
+                        shelldueName: shelldue.name
+                    }
+                    shelldue.executing? utils.writeToLog(toLog, 1):utils.writeToLog(toLog, 3)//*/
             } 
         }
     }
