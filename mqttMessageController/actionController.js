@@ -38,6 +38,7 @@ async function checkActions(stationsShelldue, user, topic){
 
 async function notificationCheck(action, stationsShelldue, user){
     if(Object.keys(action).includes("notification")){
+        console.log(action)
         for (let i = 0; i < action.notification.length; i++) {
             const body = action.notification.notificationMessage[i]
             console.log(action.notification.executing)
