@@ -40,7 +40,6 @@ async function notificationCheck(action, stationsShelldue, user){
     if(Object.keys(action).includes("notification")){
         for (let i = 0; i < action.notification.length; i++) {
             const body = action.notification[i].notificationMessage
-            console.log(stationsShelldue)
             if(action.notification[i].executing == stationsShelldue.executing){
                 switch (action.notification[i].messageType){
                     case "push":
@@ -66,7 +65,6 @@ try{
             const setTopic =`${topic.userId}/${topic.gatewayId}/${set.elementId}/set`
             if(set.executing == shelldue.executing){
                 mqttSetter.publishAsync(setTopic, JSON.stringify(set))
-                console.log(shelldue)
                 const sensor = await utils.findSensorAtDB(set.elementId)
                 const toLog = {
                         userId: shelldue.userId,
@@ -76,7 +74,7 @@ try{
                         sensorName: sensor.settings.name,
                         shelldueName: shelldue.name
                     }
-                    shelldue.executing? utils.writeToLog(toLog, 1):utils.writeToLog(toLog, 3)//*/
+                    shelldue.executing? await utils.writeToLog(toLog, 1): await utils.writeToLog(toLog, 3)//*/
             } 
         }
     }

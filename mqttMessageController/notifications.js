@@ -23,9 +23,8 @@ async function postPushMessage(user, title, body){
                 push: push
             })
         }
-        console.log(body)
         fetch(`http://${process.env.PUSH_HOST}:${process.env.PUSH_PORT}/api/push`, postData)
-        .then(async (res) => {console.log(await res.json())})
+        .then(async (res) => {console.log(`Message sended at push service. ${user.email} can see it soon`)})
         .catch(err => {console.log(err)})
     
     }
@@ -41,7 +40,6 @@ async function postEmailMessage(user, content, html = undefined){
         delete user.updatedAt
         delete user.password
         delete user.phone
-        console.log(user)
         var post_data = querystring.stringify({
             user    :   JSON.stringify(user),
             content :   content,
@@ -67,7 +65,6 @@ async function postEmailMessage(user, content, html = undefined){
                 console.log('Response: ' + chunk);
             });
         });
-      console.log(post_data)
         // post the data
         post_req.write(post_data);
         post_req.end();

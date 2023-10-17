@@ -6,8 +6,6 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
     stationsShelldue.runtimeStart? timeNow = (stationsShelldue.runtimeStart <= await getCurrentTime()) && (await getCurrentTime() <= stationsShelldue.runtimeEnd): timeNow = false
     const anyTime = !(stationsShelldue.runtimeEnd && stationsShelldue.runtimeStart)
     if(conditions && (timeNow || anyTime) ){
-        console.log(stationsShelldue.id)
-        console.log("Time correct. Start check conditions")
         for (let i = 0; i < conditions.length; i++) {
                 const conditionKeys = Object.keys(conditions[i])
                 const checkedValueKey = await findMatchingKeys(conditionKeys, getSend)
@@ -23,7 +21,6 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
                     utils.updateShelldueSuccess(stationsShelldue)
             }
         }
-        console.log(stationsShelldue.success)
         let result
         switch (stationsShelldue.shelldueScript.proviso) {
             case "one":
@@ -46,9 +43,7 @@ async function findMatchingKeys(conditionKeys, getSend){
     const getSendKeys = Object.keys(getSend)
     conditionKeys.forEach(key => {
         getSendKeys.includes(key)? matchingKeys.push(key):""
-    });
-    //console.log(matchingKeys)
-    
+    });   
     return matchingKeys[0]
 }
 
