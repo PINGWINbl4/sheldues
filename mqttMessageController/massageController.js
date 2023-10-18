@@ -17,7 +17,11 @@ async function getMQTTData(topic, payload){
         }
         for (let i = 0; i < stationsShelldues.length; i++) {
 
-            console.log(await checkAllProviso(stationsShelldues[i], getSend, topic))  
+            console.log(await checkAllProviso(stationsShelldues[i], getSend, topic))
+            console.log(stationsShelldues[i])
+            console.log(getSend)
+            console.log(topic)
+              
             if((await checkAllProviso(stationsShelldues[i], getSend, topic)||stationsShelldues[i].executing) && stationsShelldues[i].active ){
                 console.log("start do action")
                 await checkActions(stationsShelldues[i], user, topic)
