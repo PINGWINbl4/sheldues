@@ -15,8 +15,8 @@ async function getMQTTData(topic, payload){
         if(user.id != station.userId){
             throw new Error('Not your gateway')
         }
-        for (let i = 0; i < stationsShelldues.length; i++) { 
-            console.log(stationsShelldues[i].executing)
+        for (let i = 0; i < stationsShelldues.length; i++) {
+            console.log((await checkAllProviso(stationsShelldues[i], getSend, topic)||stationsShelldues[i].executing) && stationsShelldues[i].active)  
             if((await checkAllProviso(stationsShelldues[i], getSend, topic)||stationsShelldues[i].executing) && stationsShelldues[i].active ){
                 console.log("start do action")
                 await checkActions(stationsShelldues[i], user, topic)
