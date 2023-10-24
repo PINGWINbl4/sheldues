@@ -40,6 +40,7 @@ model User {
   cityId         String
   contracts      Contract[]
   EventLog       EventLog[]
+  Icon           Icon[]
   metrics        Metric[]
   refreshTokens  RefreshToken[]
   Rooms          Rooms[]
@@ -68,19 +69,19 @@ model Contract {
 }
 
 model DeviceType {
-  id                 String               @id @unique @default(uuid())
-  name               String               @db.VarChar(255)
-  code               String?              @unique
-  iconId             String?
-  category           deviceCategory?
-  frontView          Json?
-  commands           Json?
-  DefaultScripts     DefaultScripts[]
-  Icon               Icon?                @relation(fields: [iconId], references: [id])
-  DeviceTypesAtGroup DeviceTypesAtGroup[]
-  sensors            Sensor[]
-  stations           Station[]
-  versions           Version[]
+  id                          String                        @id @unique @default(uuid())
+  name                        String                        @db.VarChar(255)
+  code                        String?                       @unique
+  iconId                      String?
+  category                    deviceCategory?
+  frontView                   Json?
+  commands                    Json?
+  Icon                        Icon?                         @relation(fields: [iconId], references: [id])
+  DeviceTypesAtDefaultScripts DeviceTypesAtDefaultScripts[]
+  DeviceTypesAtGroup          DeviceTypesAtGroup[]
+  sensors                     Sensor[]
+  stations                    Station[]
+  versions                    Version[]
 }
 
 model Version {
@@ -205,22 +206,26 @@ model UserToUserGroups {
 }
 
 model Shelldue {
-  id             String                @id @unique @default(uuid())
-  active         Boolean
-  name           String
-  hash           String?
-  shelldueScript Json
-  deviceTypes    String[]
-  userId         String
-  executing      Boolean               @default(false)
-  shelldueType   ShelldueType          @default(condition)
-  runtimeEnd     DateTime?             @db.Time(6)
-  runtimeStart   DateTime?             @db.Time(6)
-  success        Boolean[]
-  lastSuccess    Boolean[]
-  EventLog       EventLog[]
-  user           User                  @relation(fields: [userId], references: [id])
-  stations       ShellduesOnStations[]
+  id                 String                @id @unique @default(uuid())
+  active             Boolean
+  name               String
+  hash               String?
+  shelldueScript     Json
+  deviceTypes        String[]
+  userId             String
+  executing          Boolean               @default(false)
+  shelldueType       ShelldueType          @default(condition)
+  runtimeEnd         DateTime?             @db.Time(6)
+  runtimeStart       DateTime?             @db.Time(6)
+  success            Boolean[]
+  lastSuccess        Boolean[]
+  duration           BigInt?
+  stage              Int                   @default(0)
+  activeDays         Int[]
+  EventLog           EventLog[]
+  user               User                  @relation(fields: [userId], references: [id])
+  ShellduesChainLink ShellduesChainLink[]
+  stations           ShellduesOnStations[]
 }
 
 model ShellduesOnStations {
@@ -240,11 +245,10 @@ model PushMessage {
 }
 
 model DefaultScripts {
-  id          String     @id @unique @default(uuid())
-  deviceId    String
-  script      Json
-  description String?
-  DeviceType  DeviceType @relation(fields: [deviceId], references: [id])
+  id                          String                        @id @unique @default(uuid())
+  script                      Json
+  description                 String?
+  DeviceTypesAtDefaultScripts DeviceTypesAtDefaultScripts[]
 }
 
 model DeviceGroup {
@@ -293,8 +297,10 @@ model Icon {
   id             String           @id @unique @default(uuid())
   name           String
   url            String
+  userId         String?
   DeviceGroup    DeviceGroup[]
   DeviceType     DeviceType[]
+  User           User?            @relation(fields: [userId], references: [id])
   SensorSettings SensorSettings[]
 }
 
@@ -307,6 +313,23 @@ model Rooms {
   User            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   SensorSettings  SensorSettings[]
   StationSettings StationSettings[]
+}
+
+model DeviceTypesAtDefaultScripts {
+  id              String         @id @unique
+  deviceTypeId    String
+  defaultScriptId String
+  DefaultScripts  DefaultScripts @relation(fields: [defaultScriptId], references: [id])
+  DeviceType      DeviceType     @relation(fields: [deviceTypeId], references: [id])
+}
+
+model ShellduesChainLink {
+  id         String   @id @unique
+  name       String
+  shelldueId String
+  number     Int
+  action     Json
+  Shelldue   Shelldue @relation(fields: [shelldueId], references: [id], onDelete: Cascade)
 }
 
 enum UserStatus {

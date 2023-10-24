@@ -48,13 +48,15 @@ async function findShelduesOfStation(gatewayId){
   if(!shellduesId.length){
     throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
+  const date = new Date()
   for (let i = 0; i < shellduesId.length; i++) {
-    shelldues.push(await db.shelldue.findFirst({
+    const shelldue = await db.shelldue.findFirst({
       where:{
           id: shellduesId[i].shelldueId,
-          active: true
       }
-    }))
+    })
+    shelldue.active && (shelldue.activeDays.includes(date.getDay()) || !shelldue.activeDays.length) 
+    ? shelldues.push(shelldue):""
   }
   return shelldues
 }
