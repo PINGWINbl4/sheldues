@@ -29,7 +29,7 @@ async function checkActions(stationsShelldue, user, topic){
         console.log(`lastSuccess: ${stationsShelldue.lastSuccess}`)
         if(!sameState){
             stationsShelldue = await utils.findShelldueById(stationsShelldue)
-            await notificationCheck(actions, stationsShelldue, user)
+            await doNotification(actions, stationsShelldue, user)
             await doActions(actions, stationsShelldue, topic)
             utils.updateLastSuccess(stationsShelldue)
         }
@@ -39,7 +39,7 @@ async function checkActions(stationsShelldue, user, topic){
     }
 }
 
-async function notificationCheck(action, stationsShelldue, user){
+async function doNotification(action, stationsShelldue, user){
     if(Object.keys(action).includes("notification")){
         for (let i = 0; i < action.notification.length; i++) {
             const body = action.notification[i].notificationMessage
@@ -82,6 +82,9 @@ try{
             } 
         }
     }
+    if(shelldue.ShellduesChainLink.length && shelldue.executing){
+        utils.sendChain(shelldue)
+}
 }
 catch(err){
     console.log(err)

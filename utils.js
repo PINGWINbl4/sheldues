@@ -55,7 +55,7 @@ async function findShelduesOfStation(gatewayId){
           id: shellduesId[i].shelldueId,
       }
     })
-    shelldue.active && (shelldue.activeDays.includes(date.getDay()) || !shelldue.activeDays.length) 
+    shelldue.active && (shelldue.activeDays.length && shelldue.activeDays.includes(date.getDay())) 
     ? shelldues.push(shelldue):""
   }
   return shelldues
@@ -138,9 +138,40 @@ async function findShelldueById(shelldue){
   return await db.shelldue.findUnique({
     where:{
       id:shelldue.id
+    },
+    include:{
+      ShellduesChainLink:{
+        orderBy:{
+          number:'asc'
+        }
+      }
     }
   })
 }
+
+async function sendChain(shelldue){
+  try{
+
+    const postData = {
+      method: "POST",
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        shelldue:shelldue
+      })
+    }
+  fetch(`http://${process.env.SHELLDUE_CHAIN_HOST}:${process.env.SHELLDUE_CHAIN_PORT}/`, postData)
+      .then(async (res) => {
+      console.log(await res.json())
+      })
+      .catch(err => {throw new Error(err)})
+  }
+  catch(err){
+    console.log(err)
+  }
+  }
 module.exports = {
     findUser,
     findUsersShelldue,
@@ -151,5 +182,6 @@ module.exports = {
     writeToLog,
     updateShelldueSuccess,
     updateLastSuccess,
-    findShelldueById
+    findShelldueById,
+    sendChain
 }
