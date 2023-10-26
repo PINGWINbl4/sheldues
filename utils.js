@@ -67,7 +67,11 @@ async function findSensorAtDB(elementId){
       elementId:elementId
     },
     include:{
-      settings:true
+      SensorSettings:{
+        include:{
+          Rooms:true
+        }
+      }
     }
   })
 }

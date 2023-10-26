@@ -76,7 +76,8 @@ try{
                         sensorId: sensor.id,
                         shelldueId: shelldue.id,
                         sensorName: sensor.settings.name,
-                        shelldueName: shelldue.name
+                        shelldueName: shelldue.name,
+                        roomName: sensor.SensorSettings.Rooms.name
                     }
                     shelldue.executing? await utils.writeToLog(toLog, 1): await utils.writeToLog(toLog, 3)//*/
             } 
