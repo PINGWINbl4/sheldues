@@ -18,7 +18,6 @@ const mqttOptions = {
 const mqttSetter = mqtt.connect(mqttUrl, mqttOptions)
 
 async function checkActions(stationsShelldue, user, topic){
-    console.log("start do actions")
     try{
         const actions = stationsShelldue.shelldueScript.actions
         let sameState = true
