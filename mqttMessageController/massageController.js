@@ -9,6 +9,7 @@ async function getMQTTData(topic, payload){
     try{
         topic = parseTopic(topic)
         getSend = JSON.parse(stringPayload);
+        console.log(getSend)
         const user = await utils.findUser(topic.userId)
         const stationsShelldues = await utils.findShelduesOfStation(topic.gatewayId)
         const station = await utils.findStationAtDB(topic.gatewayId)
