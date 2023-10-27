@@ -63,6 +63,7 @@ async function findShelduesOfStation(gatewayId){
     shelldue.active && (!shelldue.activeDays.length ||  shelldue.activeDays.includes(date.getDay())) 
     ? shelldues.push(shelldue):console.log(`shalldue ${shelldue.id} non active in this day`)
   }
+  shelldues = [... new Set(shelldues)]
   console.log(shelldues)
   return shelldues
 }
