@@ -59,7 +59,7 @@ async function findShelduesOfStation(gatewayId){
           id: shellduesId[i].shelldueId,
       }
     })
-    console.log(!shelldue.activeDays.length || (shelldue.activeDays.length && shelldue.activeDays.includes(date.getDay())))
+    console.log(shelldue.active && (!shelldue.activeDays.length || (shelldue.activeDays.length && shelldue.activeDays.includes(date.getDay()))))
     shelldue.active && (!shelldue.activeDays.length || (shelldue.activeDays.length && shelldue.activeDays.includes(date.getDay()))) 
     ? shelldues.push(shelldue):console.log(`shalldue ${shelldue.id} non active in this day ${shelldue.activeDays}`)
   }
