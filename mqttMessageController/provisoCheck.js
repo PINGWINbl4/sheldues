@@ -52,10 +52,11 @@ async function compareByProviso(ShellduesValue, proviso, getSendValue){
     if(ShellduesValue == undefined){
         return false
     }
+    console.log(ShellduesValue)
+    console.log(getSendValue),
+    console.log(proviso)
     switch (proviso) {
         case "=":
-            console.log(ShellduesValue)
-            console.log(getSendValue)
             return ShellduesValue == getSendValue
         case ">":
             return ShellduesValue > getSendValue
