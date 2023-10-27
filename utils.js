@@ -48,7 +48,6 @@ async function findShelduesOfStation(gatewayId){
       stationId: station.id
     }
   })
-  console.log(shellduesId.length)
   if(!shellduesId.length){
     throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
@@ -59,7 +58,6 @@ async function findShelduesOfStation(gatewayId){
           id: shellduesId[i].shelldueId,
       }
     })
-    console.log(shelldue.active && (!shelldue.activeDays.length || (shelldue.activeDays.length && shelldue.activeDays.includes(date.getDay()))))
     shelldue.active && (!shelldue.activeDays.length ||  shelldue.activeDays.includes(date.getDay())) 
     ? shelldues.push(shelldue):console.log(`shalldue ${shelldue.id} non active in this day`)
   }
