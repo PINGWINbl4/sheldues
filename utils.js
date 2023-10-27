@@ -40,7 +40,7 @@ async function findShelduesOfStation(gatewayId){
     ignoredStations.push(gatewayId)
     throw new Error(`Can't find station in db with gatewayId ${gatewayId}`)
   }
-  const shellduesId = await db.ShellduesOnStations.findMany({
+  const shellduesId = await db.shellduesOnStations.findMany({
     where:{
       stationId: station.id
     }
