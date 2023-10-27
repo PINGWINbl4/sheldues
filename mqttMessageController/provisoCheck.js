@@ -54,6 +54,8 @@ async function compareByProviso(ShellduesValue, proviso, getSendValue){
     }
     switch (proviso) {
         case "=":
+            console.log(ShellduesValue)
+            console.log(getSendValue)
             return ShellduesValue == getSendValue
         case ">":
             return ShellduesValue > getSendValue
