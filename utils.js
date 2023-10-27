@@ -34,8 +34,12 @@ async function findShelduesOfStation(gatewayId){
   const station = await db.station.findFirst({
     where:{
       gatewayId:gatewayId
+    },
+    include:{
+      shelldues:true
     }
   })
+  console.log(station)
   if(!station){
     ignoredStations.push(gatewayId)
     throw new Error(`Can't find station in db with gatewayId ${gatewayId}`)
@@ -45,6 +49,7 @@ async function findShelduesOfStation(gatewayId){
       stationId: station.id
     }
   })
+  console.log(shellduesId)
   if(!shellduesId.length){
     throw new Error(`Station with ${gatewayId} gatevayId haven't sheldues`)
   }
