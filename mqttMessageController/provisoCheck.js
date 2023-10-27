@@ -18,8 +18,8 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
                     else{
                         stationsShelldue.success[i] = false
                     }
-                    await utils.updateShelldueSuccess(stationsShelldue)
-            }
+                }
+                await utils.updateShelldueSuccess(stationsShelldue)
         }
         let result
         switch (stationsShelldue.shelldueScript.proviso) {
