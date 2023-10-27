@@ -5,11 +5,11 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
     let timeNow
     stationsShelldue.runtimeStart? timeNow = (stationsShelldue.runtimeStart <= await getCurrentTime()) && (await getCurrentTime() <= stationsShelldue.runtimeEnd): timeNow = false
     const anyTime = !(stationsShelldue.runtimeEnd && stationsShelldue.runtimeStart)
-    console.log(conditions && (timeNow || anyTime))
     if(conditions && (timeNow || anyTime) ){
         for (let i = 0; i < conditions.length; i++) {
                 const conditionKeys = Object.keys(conditions[i])
                 const checkedValueKey = await findMatchingKeys(conditionKeys, getSend)
+                console.log(topic.elementId == conditions[i].sensor)
                 if (topic.elementId == conditions[i].sensor){
                     if(await compareByProviso(conditions[i][checkedValueKey], conditions[i].proviso, getSend[checkedValueKey])){
                         console.log("conditions correct")
