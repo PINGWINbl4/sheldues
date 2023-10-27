@@ -5,7 +5,7 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
     let timeNow
     stationsShelldue.runtimeStart? timeNow = (stationsShelldue.runtimeStart <= await getCurrentTime()) && (await getCurrentTime() <= stationsShelldue.runtimeEnd): timeNow = false
     const anyTime = !(stationsShelldue.runtimeEnd && stationsShelldue.runtimeStart)
-    console.log(stationsShelldue)
+    console.log(conditions && (timeNow || anyTime))
     if(conditions && (timeNow || anyTime) ){
         for (let i = 0; i < conditions.length; i++) {
                 const conditionKeys = Object.keys(conditions[i])
