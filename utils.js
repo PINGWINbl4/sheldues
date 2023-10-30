@@ -169,7 +169,7 @@ async function sendChain(shelldue){
         shelldue:shelldue
       })
     }
-  fetch(`http://${process.env.SHELLDUE_CHAIN_HOST}:${process.env.SHELLDUE_CHAIN_PORT}/`, postData)
+  await fetch(`http://${process.env.SHELLDUE_CHAIN_HOST}:${process.env.SHELLDUE_CHAIN_PORT}/`, postData)
       .then(async (res) => {
       console.log(await res.json())
       })

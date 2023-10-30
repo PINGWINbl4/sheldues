@@ -23,7 +23,7 @@ async function postPushMessage(user, title, body){
                 push: push
             })
         }
-        fetch(`http://${process.env.PUSH_HOST}:${process.env.PUSH_PORT}/api/push`, postData)
+        await fetch(`http://${process.env.PUSH_HOST}:${process.env.PUSH_PORT}/api/push`, postData)
         .then(async (res) => {console.log(`Message sended at push service. ${user.email} can see it soon`)})
         .catch(err => {console.log(err)})
     
