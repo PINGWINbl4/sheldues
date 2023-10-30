@@ -26,6 +26,7 @@ async function checkAllProviso(stationsShelldue, getSend, topic){
             case "one":
                 result = stationsShelldue.success.includes(true)
                 await utils.updateExeStatus(stationsShelldue, result)
+                console.log(stationsShelldue.name, result)
                 return result
             case "all":
                 result = !stationsShelldue.success.includes(false)
