@@ -3,7 +3,10 @@ const utils = require("../utils")
 async function checkAllProviso(stationsShelldue, getSend, topic){
     const conditions = stationsShelldue.shelldueScript.conditions
     let timeNow
-    stationsShelldue.runtimeStart? timeNow = (stationsShelldue.runtimeStart <= await getCurrentTime()) && (await getCurrentTime() <= stationsShelldue.runtimeEnd): timeNow = false
+    stationsShelldue.runtimeStart? timeNow = (stationsShelldue.runtimeStart <= await getCurrentTime()) && 
+            (await getCurrentTime() <= stationsShelldue.runtimeEnd): 
+            timeNow = false
+    console.log(timeNow)
     const anyTime = !(stationsShelldue.runtimeEnd && stationsShelldue.runtimeStart)
     if(conditions && (timeNow || anyTime) ){
         for (let i = 0; i < conditions.length; i++) {
