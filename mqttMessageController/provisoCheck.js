@@ -3,10 +3,18 @@ const utils = require("../utils")
 async function checkAllProviso(stationsShelldue, getSend, topic){
     const conditions = stationsShelldue.shelldueScript.conditions
     let timeNow
-    stationsShelldue.runtimeStart? timeNow = (stationsShelldue.runtimeStart <= await getCurrentTime()) && 
-            (await getCurrentTime() <= stationsShelldue.runtimeEnd): 
-            timeNow = false
-    console.log(timeNow)
+    const currentTime = await getCurrentTime()
+    if(stationsShelldue.runtimeStart) {
+        if(stationsShelldue.runtimeStart >= stationsShelldue.runtimeEnd){
+            const zeroTime = await getZeroTime()
+            timeNow = ((stationsShelldue.runtimeStart <= currentTime) && (currentTime <= zeroTime))
+            ||((zeroTime <= currentTime)&&(currentTime<=stationsShelldue.runtimeEnd))
+        }
+        else{
+            timeNow = (stationsShelldue.runtimeStart <= currentTime) && (currentTime <= stationsShelldue.runtimeEnd)
+        }
+        
+    }
     const anyTime = !(stationsShelldue.runtimeEnd && stationsShelldue.runtimeStart)
     if(conditions && (timeNow || anyTime) ){
         for (let i = 0; i < conditions.length; i++) {
@@ -76,13 +84,14 @@ async function compareByProviso(ShellduesValue, proviso, getSendValue){
 
 async function getCurrentTime(){
     const currentTime = new Date()
-    currentTime.setSeconds(0)
-    currentTime.setMilliseconds(0)
-    currentTime.setFullYear(1970)
-    currentTime.setMonth(0)
-    currentTime.setDate(1)
-    currentTime.setHours(currentTime.getHours()+5)
-    currentTime.setMinutes(currentTime.getMinutes()+1)
+    currentTime.setFullYear(1970,0,1)
+    currentTime.setHours(date.getHours()+5,date.getMinutes()+1,0,0)
+    return currentTime
+}
+async function getZeroTime(){
+    const currentTime = new Date()
+    currentTime.setFullYear(1970,0,1)
+    currentTime.setHours(0,0,0,0)
     return currentTime
 }
 module.exports = {
