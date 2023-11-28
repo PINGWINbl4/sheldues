@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const  db = new PrismaClient();
+
 var ignoredStations = []
 async function findUser(userId){
     return db.user.findUnique({

@@ -85,7 +85,7 @@ async function compareByProviso(ShellduesValue, proviso, getSendValue){
 async function getCurrentTime(){
     const currentTime = new Date()
     currentTime.setFullYear(1970,0,1)
-    currentTime.setHours(date.getHours()+5,date.getMinutes()+1,0,0)
+    currentTime.setHours(currentTime.getHours()+5,currentTime.getMinutes()+1,0,0)
     return currentTime
 }
 async function getZeroTime(){
