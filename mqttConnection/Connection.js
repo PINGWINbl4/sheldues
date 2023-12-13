@@ -7,7 +7,7 @@ async function createMQTTClient(mqttUrl, mqttOptions){
 async function connectMqtt(mqttClient) {
     if (mqttClient.connected) {
         console.log("conected")  
-        mqttClient.subscribe("$share/shelldueQueue/+/+/+");
+        mqttClient.subscribe(`$share/${process.env.MQTT_GROUP}/+/+/+`);
       } else {
         console.log("disconeted");
       } 
